@@ -1,3 +1,6 @@
 data/
 *.parquet
 .env
+airflow_settings.yaml
+__pycache__/
+.astro/config.yaml.lock
