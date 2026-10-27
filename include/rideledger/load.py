@@ -32,8 +32,8 @@ COLUMNS = [
 
 def get_connection():
     return psycopg.connect(
-        host="localhost",
-        port=5433,
+        host=os.environ.get("WAREHOUSE_HOST", "localhost"),
+        port=os.environ.get("WAREHOUSE_PORT", "5433"),
         dbname="warehouse",
         user="loader_role",
         password=os.environ["LOADER_PASSWORD"],

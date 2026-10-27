@@ -1,4 +1,10 @@
 services:
+  scheduler:
+    env_file: .env
+    environment:
+      WAREHOUSE_HOST: warehouse
+      WAREHOUSE_PORT: 5432
+
   warehouse:
     image: postgres:16
     env_file: .env
