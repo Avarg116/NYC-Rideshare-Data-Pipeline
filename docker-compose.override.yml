@@ -1,0 +1,13 @@
+services:
+  warehouse:
+    image: postgres:16
+    env_file: .env
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - warehouse_data:/var/lib/postgresql/data
+    networks:
+      - airflow
+
+volumes:
+  warehouse_data:
