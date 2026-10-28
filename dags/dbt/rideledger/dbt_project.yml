@@ -26,6 +26,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   rideledger:
     staging:
-      +materialized: view
+      materialized: view
     marts:
-      +materialized: table
+      materialized: table

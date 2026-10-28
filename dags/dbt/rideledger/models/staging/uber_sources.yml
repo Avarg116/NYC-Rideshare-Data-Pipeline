@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: uber_trips
+        columns:
+          - name: pickup_datetime
+            tests:
+              - not_null
+          - name: pu_location_id
+            tests:
+              - relationships:
+                  arguments:
+                    to: ref('stg_taxi_zones')
+                    field: location_id
+                  config:
+                    severity: warn
