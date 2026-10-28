@@ -1,0 +1,17 @@
+models:
+  - name: fct_hourly_zone_trips
+    columns:
+      - name: pu_location_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_taxi_zones')
+                field: location_id
+              config:
+                severity: warn
+      - name: pricing_period
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['pre', 'post']

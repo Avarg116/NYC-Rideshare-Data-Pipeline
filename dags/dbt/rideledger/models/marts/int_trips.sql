@@ -21,3 +21,4 @@ where
     trips.base_passenger_fare > 0
     and trips.trip_miles > 0
     and trips.dropoff_datetime > trips.pickup_datetime
+    and trips.driver_pay >= 0
