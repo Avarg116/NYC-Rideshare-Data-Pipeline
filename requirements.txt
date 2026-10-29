@@ -3,3 +3,5 @@ pyarrow
 pandas
 boto3
 requests
+astronomer-cosmos
+apache-airflow-providers-postgres

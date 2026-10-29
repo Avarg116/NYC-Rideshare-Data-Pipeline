@@ -1,6 +1,9 @@
+import os
 from datetime import timedelta
 
 from airflow.sdk import dag, task
+from cosmos import DbtTaskGroup, ProjectConfig, ProfileConfig, ExecutionConfig
+from cosmos.profiles import PostgresUserPasswordProfileMapping
 from pendulum import datetime
 import requests
 
@@ -9,6 +12,15 @@ from include.rideledger.load import load_month
 from include.rideledger.s3 import upload_month
 
 DATA_DIR = "/tmp/data"
+
+profile_config = ProfileConfig(
+    profile_name="default",
+    target_name="dev",
+    profile_mapping=PostgresUserPasswordProfileMapping(
+        conn_id="warehouse_postgres",
+        profile_args={"schema": "dbt_schema"},
+    ),
+)
 
 @dag(
     start_date=datetime(2024, 10, 1),
@@ -45,6 +57,14 @@ def rideledger_monthly():
     upload = upload_raw_to_s3(path)
     load = load_to_postgres(path)
 
-    check >> path >> upload >> load
+    dbt_models = DbtTaskGroup(
+        group_id="dbt",
+        project_config=ProjectConfig("/usr/local/airflow/dags/dbt/rideledger"),
+        operator_args={"install_deps": True},
+        profile_config=profile_config,
+        execution_config=ExecutionConfig(dbt_executable_path=f"{os.environ['AIRFLOW_HOME']}/dbt_venv/bin/dbt"),
+    )
+
+    check >> path >> upload >> load >> dbt_models
 
 rideledger_monthly()
